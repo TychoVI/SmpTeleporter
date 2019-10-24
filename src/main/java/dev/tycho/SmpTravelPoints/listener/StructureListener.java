@@ -3,12 +3,14 @@ package dev.tycho.SmpTravelPoints.listener;
 import com.j256.ormlite.stmt.QueryBuilder;
 import dev.tycho.SmpTravelPoints.SmpTravelPoints;
 import dev.tycho.SmpTravelPoints.database.Teleporter;
+import dev.tycho.SmpTravelPoints.model.CustomItems;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Beacon;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -21,7 +23,7 @@ import java.util.List;
 public class StructureListener implements Listener {
     @EventHandler
     public void onBeaconPlace(BlockPlaceEvent event) {
-        if(event.getBlock().getType() != Material.BEACON) {
+        if(!event.getItemInHand().isSimilar(CustomItems.teleporter)) {
             return;
         }
 
@@ -76,19 +78,24 @@ public class StructureListener implements Listener {
 
         Location beaconLocation = event.getBlock().getLocation();
 
-        Collection<Entity> nearbyEntities = beaconLocation.getWorld().getNearbyEntities(beaconLocation, 18, 4, 18);
-
-        for(Entity entity : nearbyEntities) {
-            if(entity instanceof EnderCrystal) {
-                entity.remove();
-            }
-        }
-
         QueryBuilder<Teleporter, Integer> queryBuilder = SmpTravelPoints.teleportDao.queryBuilder();
         try {
             List<Teleporter> teleporters = queryBuilder.where().eq("x", beaconLocation.getBlockX()).and().eq("y", beaconLocation.getBlockY()).and().eq("z", beaconLocation.getBlockZ()).query();
             if(teleporters.size() > 0) {
                 SmpTravelPoints.teleportDao.delete(teleporters.get(0));
+
+                Collection<Entity> nearbyEntities = beaconLocation.getWorld().getNearbyEntities(beaconLocation, 18, 4, 18);
+
+                for(Entity entity : nearbyEntities) {
+                    if(entity instanceof EnderCrystal) {
+                        entity.remove();
+                    }
+                }
+
+                event.setDropItems(false);
+
+                event.getBlock().getWorld().dropItemNaturally(beaconLocation, CustomItems.teleporter);
+                event.getPlayer().sendMessage(event.getBlock().getBlockData().getAsString());
             }
         } catch (SQLException e) {
             e.printStackTrace();

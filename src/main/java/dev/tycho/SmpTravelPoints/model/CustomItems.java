@@ -14,7 +14,7 @@ public class CustomItems {
         //Teleporter
         teleporter = new ItemStack(Material.BEACON, 1);
         ItemMeta teleporterMeta = teleporter.getItemMeta();
-        teleporterMeta.setDisplayName(ChatColor.GREEN + "Teleporter");
+        teleporterMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Teleporter");
         teleporterMeta.addEnchant(Enchantment.CHANNELING, 1, true);
         teleporter.setItemMeta(teleporterMeta);
 
