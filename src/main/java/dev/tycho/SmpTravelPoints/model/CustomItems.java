@@ -3,6 +3,7 @@ package dev.tycho.SmpTravelPoints.model;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -16,6 +17,7 @@ public class CustomItems {
         ItemMeta teleporterMeta = teleporter.getItemMeta();
         teleporterMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Teleporter");
         teleporterMeta.addEnchant(Enchantment.CHANNELING, 1, true);
+        teleporterMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         teleporter.setItemMeta(teleporterMeta);
 
         //EnderDiamond
@@ -23,6 +25,7 @@ public class CustomItems {
         ItemMeta enderDiamondMeta = enderDiamond.getItemMeta();
         enderDiamondMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Ender diamond");
         enderDiamondMeta.addEnchant(Enchantment.CHANNELING, 1, true);
+        enderDiamondMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         enderDiamond.setItemMeta(enderDiamondMeta);
 
     }

@@ -1,5 +1,8 @@
 package dev.tycho.SmpTravelPoints;
 
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChain;
+import co.aikar.taskchain.TaskChainFactory;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -19,8 +22,15 @@ import java.sql.SQLException;
 public class SmpTravelPoints extends JavaPlugin {
     public static Dao<Teleporter, Integer> teleportDao;
 
+    private static TaskChainFactory taskChainFactory;
+    public static <T> TaskChain<T> newChain() {
+        return taskChainFactory.newChain();
+    }
+
     @Override
     public void onEnable() {
+        taskChainFactory = BukkitTaskChainFactory.create(this);
+
         this.saveDefaultConfig();
 
 //      Database initialization
