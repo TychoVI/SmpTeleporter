@@ -1,5 +1,6 @@
 package dev.tycho.SmpTravelPoints.model;
 
+import dev.tycho.SmpTravelPoints.util.CustomItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

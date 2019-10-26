@@ -3,3 +3,7 @@ version: 1.0
 api-version: 1.14
 main: dev.tycho.SmpTravelPoints.SmpTravelPoints
 author: TychoVI
+commands:
+  setTpIcon:
+    description: Set your teleporter icon for in the teleporters list.
+    usage: /setTpIcon

@@ -3,18 +3,21 @@ package dev.tycho.SmpTravelPoints.listener;
 import com.j256.ormlite.stmt.QueryBuilder;
 import dev.tycho.SmpTravelPoints.SmpTravelPoints;
 import dev.tycho.SmpTravelPoints.database.Teleporter;
-import dev.tycho.SmpTravelPoints.model.CustomItems;
+import dev.tycho.SmpTravelPoints.util.CustomItems;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.block.Beacon;
+import org.bukkit.block.data.type.Switch;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -27,46 +30,22 @@ public class StructureListener implements Listener {
             return;
         }
 
-        Beacon beacon = (Beacon) event.getBlock().getState();
-
-        Location beaconLocation = beacon.getLocation();
-        Location checkLocation1 = beacon.getLocation();
-        Location checkLocation2 = beacon.getLocation();
-        Location teleportLocation = beacon.getLocation();
-        Location buttonLocation = beacon.getLocation();
-
-        checkLocation1.setY(checkLocation1.getY() - 1);
-        checkLocation2.setY(checkLocation2.getY() - 2);
-        teleportLocation.setY(teleportLocation.getY() - 0);
+        Location buttonLocation = event.getBlock().getLocation();
         buttonLocation.setY(buttonLocation.getBlockY() + 1);
 
-        if(checkLocation1.getBlock().getType() != Material.DIAMOND_BLOCK) {
-            return;
-        }
+        buttonLocation.getBlock().setType(Material.STONE_BUTTON);
+        Switch faceData = (Switch) buttonLocation.getBlock().getBlockData();
+        faceData.setFace(Switch.Face.FLOOR);
+        buttonLocation.getBlock().setBlockData(faceData);
 
-        Collection<Entity> nearbyEntities = beaconLocation.getWorld().getNearbyEntities(beaconLocation, 18, 4, 18);
-
-        int crystalCount = 0;
-
-        for(Entity entity : nearbyEntities) {
-            if(entity instanceof EnderCrystal) {
-                ((EnderCrystal) entity).setBeamTarget(teleportLocation);
-                crystalCount++;
+        SmpTravelPoints.newChain().async(() -> {
+            try {
+                Teleporter teleporter = new Teleporter(event.getBlock().getLocation(), event.getPlayer(), false);
+                SmpTravelPoints.teleportDao.create(teleporter);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        }
-
-        if(crystalCount < 3) {
-            return;
-        }
-
-        Teleporter teleporter = new Teleporter(beaconLocation, event.getPlayer());
-        try {
-            SmpTravelPoints.teleportDao.create(teleporter);
-            event.getPlayer().playSound(beaconLocation, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        }).execute();
 
     }
 
@@ -76,30 +55,49 @@ public class StructureListener implements Listener {
             return;
         }
 
+        event.setDropItems(false);
+
         Location beaconLocation = event.getBlock().getLocation();
 
-        QueryBuilder<Teleporter, Integer> queryBuilder = SmpTravelPoints.teleportDao.queryBuilder();
-        try {
-            List<Teleporter> teleporters = queryBuilder.where().eq("x", beaconLocation.getBlockX()).and().eq("y", beaconLocation.getBlockY()).and().eq("z", beaconLocation.getBlockZ()).query();
+        SmpTravelPoints.newChain().asyncFirst(() -> {
+            QueryBuilder<Teleporter, Integer> queryBuilder = SmpTravelPoints.teleportDao.queryBuilder();
+            List<Teleporter> teleporters = null;
+            try {
+                teleporters = queryBuilder.where().eq("x", beaconLocation.getBlockX()).and().eq("y", beaconLocation.getBlockY()).and().eq("z", beaconLocation.getBlockZ()).query();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return teleporters;
+        }).sync((teleporters) -> {
             if(teleporters.size() > 0) {
-                SmpTravelPoints.teleportDao.delete(teleporters.get(0));
+                Teleporter teleporter = teleporters.get(0);
 
-                Collection<Entity> nearbyEntities = beaconLocation.getWorld().getNearbyEntities(beaconLocation, 18, 4, 18);
+                if(teleporter.getActive()) {
+                    Collection<Entity> nearbyEntities = beaconLocation.getWorld().getNearbyEntities(beaconLocation, 18, 8, 18);
 
-                for(Entity entity : nearbyEntities) {
-                    if(entity instanceof EnderCrystal) {
-                        entity.remove();
+                    for(Entity entity : nearbyEntities) {
+                        if(entity instanceof EnderCrystal) {
+                            entity.remove();
+                        }
                     }
                 }
 
-                event.setDropItems(false);
-
-                event.getBlock().getWorld().dropItemNaturally(beaconLocation, CustomItems.teleporter);
-                event.getPlayer().sendMessage(event.getBlock().getBlockData().getAsString());
+                if(event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+                    event.getBlock().getWorld().dropItemNaturally(beaconLocation, CustomItems.teleporter);
+                }
+                return teleporter;
+            } else {
+                if(event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+                    event.getBlock().getWorld().dropItemNaturally(beaconLocation, new ItemStack(Material.BEACON));
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+            return null;
+        }).abortIfNull().asyncLast(teleporter -> {
+            try {
+                SmpTravelPoints.teleportDao.delete(teleporter);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }).execute();
     }
 }
