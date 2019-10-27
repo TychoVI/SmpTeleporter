@@ -45,4 +45,16 @@ public class CustomItems {
 
         return teleporterItem;
     }
+
+    public static ItemStack getTeleporterInfoItem(Teleporter teleporter) {
+        ItemStack teleporterItem = new ItemStack(teleporter.getIcon());
+        ItemMeta itemMeta = teleporterItem.getItemMeta();
+        itemMeta.setDisplayName(ChatColor.LIGHT_PURPLE + teleporter.getName());
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.AQUA + "Click to set teleporter icon.");
+        itemMeta.setLore(lore);
+        teleporterItem.setItemMeta(itemMeta);
+
+        return teleporterItem;
+    }
 }

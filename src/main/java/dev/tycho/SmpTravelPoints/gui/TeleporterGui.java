@@ -48,6 +48,11 @@ public class TeleporterGui implements InventoryProvider {
     public void init(Player player, InventoryContents contents) {
         contents.fillBorders(ClickableItem.empty(new ItemStack(Material.BLACK_STAINED_GLASS_PANE)));
 
+        contents.set(0,4, ClickableItem.of(CustomItems.getTeleporterInfoItem(teleporter), e -> {
+            player.performCommand("tpicon");
+            contents.inventory().close(player);
+        }));
+
         Pagination pagination = contents.pagination();
 
         ClickableItem[] items = new ClickableItem[teleporters.size()];

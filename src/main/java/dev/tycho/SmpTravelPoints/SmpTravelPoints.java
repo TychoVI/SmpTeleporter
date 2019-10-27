@@ -76,7 +76,7 @@ public class SmpTravelPoints extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new TeleporterRecipe(this), this);
         EnderDiamondRecipe enderDiamondRecipe = new EnderDiamondRecipe(this);
 
-        this.getCommand("setTpIcon").setExecutor(new SetIconCommand());
+        this.getCommand("TpIcon").setExecutor(new SetIconCommand());
     }
     @Override
     public void onDisable() {
