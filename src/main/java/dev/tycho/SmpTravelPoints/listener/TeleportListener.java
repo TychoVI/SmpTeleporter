@@ -76,11 +76,12 @@ public class TeleportListener implements Listener {
                             enderCrystal.setBeamTarget(event.getClickedBlock().getLocation());
                         }
 
-                        List<Teleporter> validTeleporters = SmpTravelPoints.teleportDao.queryBuilder().where()
+                        List<Teleporter> validTeleporters = SmpTravelPoints.teleportDao.queryBuilder().orderBy("name", true).where()
                                 .between("x", teleporter.getX() - range, teleporter.getX() + range).and()
                                 .between("z", teleporter.getZ() - range, teleporter.getZ() + range).and()
-                                .not().eq("id", teleporter.getId()).and()
-                                .eq("active", 1).query();
+                                .eq("active", 1).and()
+                                .not().eq("id", teleporter.getId()).query();
+
 
                         inventory = TeleporterGui.getInventory(teleporter, validTeleporters);
 

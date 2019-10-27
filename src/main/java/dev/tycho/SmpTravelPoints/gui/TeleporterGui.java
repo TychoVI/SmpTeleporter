@@ -81,11 +81,21 @@ public class TeleporterGui implements InventoryProvider {
         pagination.setItems(items);
         pagination.setItemsPerPage(7);
 
+        ItemStack nextArrow = new ItemStack(Material.ARROW);
+        ItemMeta nextMeta = nextArrow.getItemMeta();
+        nextMeta.setDisplayName(ChatColor.AQUA + "Next page");
+        nextArrow.setItemMeta(nextMeta);
+
+        ItemStack previousArrow = new ItemStack(Material.ARROW);
+        ItemMeta previousMeta = previousArrow.getItemMeta();
+        previousMeta.setDisplayName(ChatColor.AQUA + "Previous page");
+        previousArrow.setItemMeta(previousMeta);
+
         pagination.addToIterator(contents.newIterator(SlotIterator.Type.HORIZONTAL, 1, 1));
 
-        contents.set(2, 3, ClickableItem.of(new ItemStack(Material.ARROW),
+        contents.set(2, 3, ClickableItem.of(previousArrow,
                 e -> getInventory(teleporter, teleporters).open(player, pagination.previous().getPage())));
-        contents.set(2, 5, ClickableItem.of(new ItemStack(Material.ARROW),
+        contents.set(2, 5, ClickableItem.of(nextArrow,
                 e -> getInventory(teleporter, teleporters).open(player, pagination.next().getPage())));
     }
 
