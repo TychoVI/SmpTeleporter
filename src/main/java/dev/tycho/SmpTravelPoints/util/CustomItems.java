@@ -34,12 +34,12 @@ public class CustomItems {
         enderDiamond.setItemMeta(enderDiamondMeta);
     }
 
-    public static ItemStack getTeleporterMenuItem(Teleporter teleporter) {
+    public static ItemStack getTeleporterMenuItem(Teleporter teleporter, Teleporter origin) {
         ItemStack teleporterItem = new ItemStack(teleporter.getIcon());
         ItemMeta itemMeta = teleporterItem.getItemMeta();
         itemMeta.setDisplayName(ChatColor.LIGHT_PURPLE + teleporter.getName());
         List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.AQUA + "Distance: " + Math.round(Point2D.distance(teleporter.getX(), teleporter.getZ(), teleporter.getX(), teleporter.getZ())) + " blocks.");
+        lore.add(ChatColor.AQUA + "Distance: " + Math.round(Point2D.distance(teleporter.getX(), teleporter.getZ(), origin.getX(), origin.getZ())) + " blocks.");
         itemMeta.setLore(lore);
         teleporterItem.setItemMeta(itemMeta);
 

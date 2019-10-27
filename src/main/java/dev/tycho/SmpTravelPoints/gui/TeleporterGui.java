@@ -54,7 +54,7 @@ public class TeleporterGui implements InventoryProvider {
 
         for(int i = 0; i < teleporters.size(); i++) {
             int finalI = i;
-            items[i] = ClickableItem.of(CustomItems.getTeleporterMenuItem(teleporters.get(i)), e -> {
+            items[i] = ClickableItem.of(CustomItems.getTeleporterMenuItem(teleporters.get(i), teleporter), e -> {
                 SmpTravelPoints.newChain().sync(() -> {
                     Util.playSound(player, Sound.BLOCK_CONDUIT_AMBIENT);
                     player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 220, 1, true, false, false));
@@ -65,7 +65,7 @@ public class TeleporterGui implements InventoryProvider {
                     Util.playSound(player, Sound.BLOCK_CONDUIT_AMBIENT);
                     Util.playSound(player, Sound.BLOCK_PORTAL_TRIGGER);
                 }).delay(80).sync(() -> {
-                    Location location = Util.offsetLocation(teleporters.get(finalI).getLocation(), 1, 0.5, 0.5);
+                    Location location = Util.offsetLocation(teleporters.get(finalI).getLocation(), 0.5, 1, 0.5);
                     location.setPitch(90);
                     Util.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT);
                     player.teleport(location);

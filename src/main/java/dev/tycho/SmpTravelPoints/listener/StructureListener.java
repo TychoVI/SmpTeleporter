@@ -7,6 +7,7 @@ import dev.tycho.SmpTravelPoints.util.CustomItems;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Switch;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
@@ -47,6 +48,15 @@ public class StructureListener implements Listener {
             }
         }).execute();
 
+    }
+
+    @EventHandler
+    public void onBeaconExplode(EntityExplodeEvent event) {
+        for(Block block : event.blockList()) {
+            if(block.getType() == Material.BEACON) {
+                event.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler
