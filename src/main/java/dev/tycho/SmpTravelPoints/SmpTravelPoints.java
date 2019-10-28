@@ -6,6 +6,7 @@ import co.aikar.taskchain.TaskChainFactory;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.logger.LocalLog;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -57,7 +58,7 @@ public class SmpTravelPoints extends JavaPlugin {
         String databaseUrl = "jdbc:mysql://" + host + ":" + port + "/" + database + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT&useSSL=" + useSsl;
 
         try {
-            ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl, username, password);
+            ConnectionSource connectionSource = new JdbcPooledConnectionSource(databaseUrl, username, password);
 
             teleportDao = DaoManager.createDao(connectionSource, Teleporter.class);
             TableUtils.createTableIfNotExists(connectionSource, Teleporter.class);
