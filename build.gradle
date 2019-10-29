@@ -26,7 +26,6 @@ dependencies {
     compile 'co.aikar:taskchain-bukkit:3.7.2'
     compile "com.j256.ormlite:ormlite-core:5.1"
     compile "com.j256.ormlite:ormlite-jdbc:5.1"
-    implementation 'com.github.WesJD.AnvilGUI:anvilgui:4b7a469d7e'
 }
 
 compileJava.options.encoding = 'UTF-8'

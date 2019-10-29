@@ -11,6 +11,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import dev.tycho.SmpTeleporter.Command.SetIconCommand;
 import dev.tycho.SmpTeleporter.database.Teleporter;
+import dev.tycho.SmpTeleporter.listener.MessageListener;
 import dev.tycho.SmpTeleporter.listener.SetIconListener;
 import dev.tycho.SmpTeleporter.listener.StructureListener;
 import dev.tycho.SmpTeleporter.listener.TeleportListener;
@@ -18,10 +19,12 @@ import dev.tycho.SmpTeleporter.util.CustomItems;
 import dev.tycho.SmpTeleporter.model.EnderDiamondRecipe;
 import dev.tycho.SmpTeleporter.model.TeleporterRecipe;
 import fr.minuskube.inv.InventoryManager;
+import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class SmpTeleporter extends JavaPlugin {
@@ -35,6 +38,7 @@ public class SmpTeleporter extends JavaPlugin {
     public static InventoryManager inventoryManager;
 
     public static ArrayList<UUID> iconSetters = new ArrayList<>();
+    public static HashMap<UUID, Location> nameSetters = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -73,6 +77,7 @@ public class SmpTeleporter extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new StructureListener(), this);
         getServer().getPluginManager().registerEvents(new TeleportListener(), this);
         getServer().getPluginManager().registerEvents(new SetIconListener(), this);
+        getServer().getPluginManager().registerEvents(new MessageListener(), this);
         getServer().getPluginManager().registerEvents(new TeleporterRecipe(this), this);
         EnderDiamondRecipe enderDiamondRecipe = new EnderDiamondRecipe(this);
 

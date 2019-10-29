@@ -4,8 +4,8 @@ import dev.tycho.SmpTeleporter.SmpTeleporter;
 import dev.tycho.SmpTeleporter.database.Teleporter;
 import dev.tycho.SmpTeleporter.gui.TeleporterGui;
 import dev.tycho.SmpTeleporter.util.Filter;
+import dev.tycho.SmpTeleporter.util.Util;
 import fr.minuskube.inv.SmartInventory;
-import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EnderCrystal;
@@ -13,7 +13,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -90,28 +94,22 @@ public class TeleportListener implements Listener {
                             event.getPlayer().sendMessage(ChatColor.RED + "Teleporter structure not valid!");
                             return null;
                         }
-                        inventory = new AnvilGUI.Builder()
-                                .onComplete((player, text) -> {
-                                    try {
-                                        for(Entity entity :  enderCrystals) {
-                                            EnderCrystal enderCrystal = (EnderCrystal) entity;
-                                            enderCrystal.setBeamTarget(event.getClickedBlock().getLocation());
-                                        }
 
-                                        teleporter.setName(text);
-                                        teleporter.setActive(true);
-                                        SmpTeleporter.teleportDao.update(teleporter);
+                        if(teleporter.getOwner() != event.getPlayer().getUniqueId()) {
+                            event.getPlayer().sendMessage(ChatColor.RED + "You are not the owner of that teleporter! Tell the owner to activate it.");
+                            SmpTeleporter.iconSetters.remove(event.getPlayer().getUniqueId());
+                            return null;
+                        }
 
-                                        player.getWorld().playSound(playerLocation, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
-                                        Bukkit.broadcastMessage(ChatColor.AQUA + "A teleporter to: '" + text + "' has just been activated!");
-                                    } catch (SQLException e) {
-                                        e.printStackTrace();
-                                    }
-                                    return AnvilGUI.Response.close();
-                                })
-                                .preventClose()
-                                .text("Location name")
-                                .plugin(Bukkit.getServer().getPluginManager().getPlugin("SmpTeleporter"));
+                        SmpTeleporter.nameSetters.put(event.getPlayer().getUniqueId(), Util.offsetLocation(button.getLocation(), 0, -1, 0));
+
+                        for(int i = 0; i < 50; i++) {
+                            event.getPlayer().sendMessage(" ");
+                        }
+
+                        event.getPlayer().sendMessage(ChatColor.AQUA + "Please type the name you want for this teleporter in chat like you would a normal message.");
+
+                        return null;
                     }
                 }
             } catch (SQLException e) {
@@ -121,8 +119,6 @@ public class TeleportListener implements Listener {
         }).abortIfNull().syncLast((inventory) -> {
             if(inventory instanceof SmartInventory) {
                 ((SmartInventory) inventory).open(event.getPlayer());
-            } else {
-                ((AnvilGUI.Builder) inventory).open(event.getPlayer());
             }
         }).execute();
     }
