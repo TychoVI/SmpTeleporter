@@ -1,9 +1,9 @@
-package dev.tycho.SmpTravelPoints.listener;
+package dev.tycho.SmpTeleporter.listener;
 
 import com.j256.ormlite.stmt.QueryBuilder;
-import dev.tycho.SmpTravelPoints.SmpTravelPoints;
-import dev.tycho.SmpTravelPoints.database.Teleporter;
-import dev.tycho.SmpTravelPoints.util.CustomItems;
+import dev.tycho.SmpTeleporter.SmpTeleporter;
+import dev.tycho.SmpTeleporter.database.Teleporter;
+import dev.tycho.SmpTeleporter.util.CustomItems;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,8 +14,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -39,10 +37,10 @@ public class StructureListener implements Listener {
         faceData.setFace(Switch.Face.FLOOR);
         buttonLocation.getBlock().setBlockData(faceData);
 
-        SmpTravelPoints.newChain().async(() -> {
+        SmpTeleporter.newChain().async(() -> {
             try {
                 Teleporter teleporter = new Teleporter(event.getBlock().getLocation(), event.getPlayer(), false);
-                SmpTravelPoints.teleportDao.create(teleporter);
+                SmpTeleporter.teleportDao.create(teleporter);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -69,8 +67,8 @@ public class StructureListener implements Listener {
 
         Location beaconLocation = event.getBlock().getLocation();
 
-        SmpTravelPoints.newChain().asyncFirst(() -> {
-            QueryBuilder<Teleporter, Integer> queryBuilder = SmpTravelPoints.teleportDao.queryBuilder();
+        SmpTeleporter.newChain().asyncFirst(() -> {
+            QueryBuilder<Teleporter, Integer> queryBuilder = SmpTeleporter.teleportDao.queryBuilder();
             List<Teleporter> teleporters = null;
             try {
                 teleporters = queryBuilder.where().eq("x", beaconLocation.getBlockX()).and().eq("y", beaconLocation.getBlockY()).and().eq("z", beaconLocation.getBlockZ()).query();
@@ -104,7 +102,7 @@ public class StructureListener implements Listener {
             return null;
         }).abortIfNull().asyncLast(teleporter -> {
             try {
-                SmpTravelPoints.teleportDao.delete(teleporter);
+                SmpTeleporter.teleportDao.delete(teleporter);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

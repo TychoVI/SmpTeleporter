@@ -1,4 +1,4 @@
-package dev.tycho.SmpTravelPoints.util;
+package dev.tycho.SmpTeleporter.util;
 
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;

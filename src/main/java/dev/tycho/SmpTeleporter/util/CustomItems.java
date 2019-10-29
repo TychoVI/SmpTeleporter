@@ -1,6 +1,6 @@
-package dev.tycho.SmpTravelPoints.util;
+package dev.tycho.SmpTeleporter.util;
 
-import dev.tycho.SmpTravelPoints.database.Teleporter;
+import dev.tycho.SmpTeleporter.database.Teleporter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

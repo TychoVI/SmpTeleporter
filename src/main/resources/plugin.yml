@@ -1,7 +1,7 @@
-name: SmpTravelPoints
+name: SmpTeleporter
 version: 1.0
 api-version: 1.14
-main: dev.tycho.SmpTravelPoints.SmpTravelPoints
+main: dev.tycho.SmpTeleporter.SmpTeleporter
 author: TychoVI
 commands:
   TpIcon:

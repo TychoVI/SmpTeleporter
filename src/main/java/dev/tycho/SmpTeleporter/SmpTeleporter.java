@@ -1,23 +1,22 @@
-package dev.tycho.SmpTravelPoints;
+package dev.tycho.SmpTeleporter;
 
 import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainFactory;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.logger.LocalLog;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import dev.tycho.SmpTravelPoints.Command.SetIconCommand;
-import dev.tycho.SmpTravelPoints.database.Teleporter;
-import dev.tycho.SmpTravelPoints.listener.SetIconListener;
-import dev.tycho.SmpTravelPoints.listener.StructureListener;
-import dev.tycho.SmpTravelPoints.listener.TeleportListener;
-import dev.tycho.SmpTravelPoints.util.CustomItems;
-import dev.tycho.SmpTravelPoints.model.EnderDiamondRecipe;
-import dev.tycho.SmpTravelPoints.model.TeleporterRecipe;
+import dev.tycho.SmpTeleporter.Command.SetIconCommand;
+import dev.tycho.SmpTeleporter.database.Teleporter;
+import dev.tycho.SmpTeleporter.listener.SetIconListener;
+import dev.tycho.SmpTeleporter.listener.StructureListener;
+import dev.tycho.SmpTeleporter.listener.TeleportListener;
+import dev.tycho.SmpTeleporter.util.CustomItems;
+import dev.tycho.SmpTeleporter.model.EnderDiamondRecipe;
+import dev.tycho.SmpTeleporter.model.TeleporterRecipe;
 import fr.minuskube.inv.InventoryManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,7 +24,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class SmpTravelPoints extends JavaPlugin {
+public class SmpTeleporter extends JavaPlugin {
     public static Dao<Teleporter, Integer> teleportDao;
 
     private static TaskChainFactory taskChainFactory;

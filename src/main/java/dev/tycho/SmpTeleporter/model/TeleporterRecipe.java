@@ -1,6 +1,6 @@
-package dev.tycho.SmpTravelPoints.model;
+package dev.tycho.SmpTeleporter.model;
 
-import dev.tycho.SmpTravelPoints.util.CustomItems;
+import dev.tycho.SmpTeleporter.util.CustomItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

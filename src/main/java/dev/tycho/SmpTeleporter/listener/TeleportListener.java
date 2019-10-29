@@ -1,9 +1,9 @@
-package dev.tycho.SmpTravelPoints.listener;
+package dev.tycho.SmpTeleporter.listener;
 
-import dev.tycho.SmpTravelPoints.SmpTravelPoints;
-import dev.tycho.SmpTravelPoints.database.Teleporter;
-import dev.tycho.SmpTravelPoints.gui.TeleporterGui;
-import dev.tycho.SmpTravelPoints.util.Filter;
+import dev.tycho.SmpTeleporter.SmpTeleporter;
+import dev.tycho.SmpTeleporter.database.Teleporter;
+import dev.tycho.SmpTeleporter.gui.TeleporterGui;
+import dev.tycho.SmpTeleporter.util.Filter;
 import fr.minuskube.inv.SmartInventory;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.*;
@@ -31,14 +31,14 @@ public class TeleportListener implements Listener {
 
         Collection<Entity> enderCrystals = event.getClickedBlock().getLocation().getWorld().getNearbyEntities(event.getClickedBlock().getLocation(), 18, 8, 18, Filter.enderCrystalFilter);
 
-        SmpTravelPoints.newChain().asyncFirst(() -> {
+        SmpTeleporter.newChain().asyncFirst(() -> {
             Block button = event.getClickedBlock();
             Location playerLocation = event.getPlayer().getLocation();
 
             Object inventory = null;
 
             try {
-                List<Teleporter> teleporters = SmpTravelPoints.teleportDao.queryBuilder().where()
+                List<Teleporter> teleporters = SmpTeleporter.teleportDao.queryBuilder().where()
                         .eq("x", button.getLocation().getBlockX()).and()
                         .eq("y", button.getLocation().getBlockY() - 1).and()
                         .eq("z", button.getLocation().getBlockZ()).query();
@@ -59,7 +59,7 @@ public class TeleportListener implements Listener {
                             event.getPlayer().sendMessage(ChatColor.RED + "Teleporter structure not valid!");
                             teleporter.setActive(false);
                             teleporter.setName(null);
-                            SmpTravelPoints.teleportDao.update(teleporter);
+                            SmpTeleporter.teleportDao.update(teleporter);
                             return null;
                         } else if(level == 1) {
                             range = 500;
@@ -76,7 +76,7 @@ public class TeleportListener implements Listener {
                             enderCrystal.setBeamTarget(event.getClickedBlock().getLocation());
                         }
 
-                        List<Teleporter> validTeleporters = SmpTravelPoints.teleportDao.queryBuilder().orderBy("name", true).where()
+                        List<Teleporter> validTeleporters = SmpTeleporter.teleportDao.queryBuilder().orderBy("name", true).where()
                                 .between("x", teleporter.getX() - range, teleporter.getX() + range).and()
                                 .between("z", teleporter.getZ() - range, teleporter.getZ() + range).and()
                                 .eq("active", 1).and()
@@ -100,7 +100,7 @@ public class TeleportListener implements Listener {
 
                                         teleporter.setName(text);
                                         teleporter.setActive(true);
-                                        SmpTravelPoints.teleportDao.update(teleporter);
+                                        SmpTeleporter.teleportDao.update(teleporter);
 
                                         player.getWorld().playSound(playerLocation, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
                                         Bukkit.broadcastMessage(ChatColor.AQUA + "A teleporter to: '" + text + "' has just been activated!");
@@ -111,7 +111,7 @@ public class TeleportListener implements Listener {
                                 })
                                 .preventClose()
                                 .text("Location name")
-                                .plugin(Bukkit.getServer().getPluginManager().getPlugin("SmpTravelPoints"));
+                                .plugin(Bukkit.getServer().getPluginManager().getPlugin("SmpTeleporter"));
                     }
                 }
             } catch (SQLException e) {

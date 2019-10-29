@@ -1,9 +1,9 @@
-package dev.tycho.SmpTravelPoints.gui;
+package dev.tycho.SmpTeleporter.gui;
 
-import dev.tycho.SmpTravelPoints.SmpTravelPoints;
-import dev.tycho.SmpTravelPoints.database.Teleporter;
-import dev.tycho.SmpTravelPoints.util.CustomItems;
-import dev.tycho.SmpTravelPoints.util.Util;
+import dev.tycho.SmpTeleporter.SmpTeleporter;
+import dev.tycho.SmpTeleporter.database.Teleporter;
+import dev.tycho.SmpTeleporter.util.CustomItems;
+import dev.tycho.SmpTeleporter.util.Util;
 import fr.minuskube.inv.ClickableItem;
 import fr.minuskube.inv.SmartInventory;
 import fr.minuskube.inv.content.InventoryContents;
@@ -20,8 +20,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TeleporterGui implements InventoryProvider {
@@ -31,7 +29,7 @@ public class TeleporterGui implements InventoryProvider {
                 .provider(new TeleporterGui(teleporter, teleporters))
                 .size(3, 9)
                 .title(ChatColor.BLUE + teleporter.getName())
-                .manager(SmpTravelPoints.inventoryManager)
+                .manager(SmpTeleporter.inventoryManager)
                 .build();
     }
 
@@ -60,7 +58,7 @@ public class TeleporterGui implements InventoryProvider {
         for(int i = 0; i < teleporters.size(); i++) {
             int finalI = i;
             items[i] = ClickableItem.of(CustomItems.getTeleporterMenuItem(teleporters.get(i), teleporter), e -> {
-                SmpTravelPoints.newChain().sync(() -> {
+                SmpTeleporter.newChain().sync(() -> {
                     Util.playSound(player, Sound.BLOCK_CONDUIT_AMBIENT);
                     player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 220, 1, true, false, false));
                     player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 165, 200, true, false, false));

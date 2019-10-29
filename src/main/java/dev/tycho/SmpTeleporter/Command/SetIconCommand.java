@@ -1,6 +1,6 @@
-package dev.tycho.SmpTravelPoints.Command;
+package dev.tycho.SmpTeleporter.Command;
 
-import dev.tycho.SmpTravelPoints.SmpTravelPoints;
+import dev.tycho.SmpTeleporter.SmpTeleporter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,7 +12,7 @@ public class SetIconCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(sender instanceof Player) {
             sender.sendMessage(ChatColor.GREEN + "Please punch the teleporter with the item you want as icon in your hand. Or type this command again to cancel setting an icon.");
-            SmpTravelPoints.iconSetters.add(((Player) sender).getUniqueId());
+            SmpTeleporter.iconSetters.add(((Player) sender).getUniqueId());
         }
 
         return true;

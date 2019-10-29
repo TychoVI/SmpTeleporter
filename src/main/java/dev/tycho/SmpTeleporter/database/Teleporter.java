@@ -1,16 +1,11 @@
-package dev.tycho.SmpTravelPoints.database;
+package dev.tycho.SmpTeleporter.database;
 
 import com.j256.ormlite.field.DatabaseField;
-import dev.tycho.SmpTravelPoints.util.Filter;
-import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.*;
-import org.bukkit.block.Beacon;
-import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 public class Teleporter {
