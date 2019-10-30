@@ -95,7 +95,7 @@ public class TeleportListener implements Listener {
                             return null;
                         }
 
-                        if(teleporter.getOwner() != event.getPlayer().getUniqueId()) {
+                        if(!teleporter.getOwner().equals(event.getPlayer().getUniqueId())) {
                             event.getPlayer().sendMessage(ChatColor.RED + "You are not the owner of that teleporter! Tell the owner to activate it.");
                             SmpTeleporter.iconSetters.remove(event.getPlayer().getUniqueId());
                             return null;
