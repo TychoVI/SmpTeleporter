@@ -15,7 +15,8 @@ build:
     stage: build
     script:
     - ./gradlew shadowJar
+    - cp build/libs/*-all.jar .
     artifacts:
         paths:
-            - build/libs/*.jar
+            - ./*-all.jar
         expire_in: 1 month
